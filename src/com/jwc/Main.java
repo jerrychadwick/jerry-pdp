@@ -6,6 +6,7 @@ public class Main {
 
     public static void main(String[] args) {
 
+        // ----------------------------------------------------------------------------
 	    // PRIVATE EXAMPLE...
         PrivateStringWriter myPrivateStringWriter = new PrivateStringWriter();
 
@@ -40,6 +41,7 @@ public class Main {
         A myA = new B();
         System.out.println("Calling getClassName() in virtual method invocation example returns " + myA.getClassName());
 
+        // ----------------------------------------------------------------------------
         // instanceof example using same classes
         B myB = new B();
         boolean bIsInstanceOf;
@@ -56,6 +58,7 @@ public class Main {
 
         System.out.println("Is class 'B' and instanceof class 'A'? " + strInstanceOf );
 
+        // ----------------------------------------------------------------------------
         // CASTING example
 
         if (bIsInstanceOf) {
