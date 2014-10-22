@@ -34,6 +34,34 @@ public class Main {
         // access the getter() directly...
         System.out.println(myProtectedStringWriter.getStrToWrite());
 
+        // ----------------------------------------------------------------------------
+        // virtual method invocation example
+
+        A myA = new B();
+        System.out.println("Calling getClassName() in virtual method invocation example returns " + myA.getClassName());
+
+        // instanceof example using same classes
+        B myB = new B();
+        boolean bIsInstanceOf;
+        String strInstanceOf;
+
+        if (myB instanceof A) {
+            bIsInstanceOf = true;
+            strInstanceOf = "Yes";
+        }
+        else {
+            bIsInstanceOf = false;
+            strInstanceOf = "No";
+        }
+
+        System.out.println("Is class 'B' and instanceof class 'A'? " + strInstanceOf );
+
+        // CASTING example
+
+        if (bIsInstanceOf) {
+            A a = (A) myB;
+            System.out.println("After casting myB as an A, a.getPrivateName() returns: " + a.getPrivateName());
+        }
     }
 
  }
