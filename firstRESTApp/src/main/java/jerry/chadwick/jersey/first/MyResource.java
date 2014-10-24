@@ -1,24 +1,32 @@
 
 package jerry.chadwick.jersey.first;
 
-// import com.sun.jersey.spi.resource.Singleton;
-
 import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.io.*;
+import java.net.URI;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
+
 import java.util.ArrayList;
 import java.lang.NumberFormatException;
+import java.util.Date;
 import java.util.List;
-import javax.ws.rs.Path;
-import java.nio.*;
+import java.util.Locale;
+
+
+import org.codehaus.jackson.JsonGenerationException;
+import org.codehaus.jackson.JsonGenerator;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.JsonFactory;
+import org.codehaus.jackson.JsonEncoding;
+import org.codehaus.enunciate.jaxrs.TypeHint;
+import com.sun.jersey.api.Responses;
 
 
 /** Example resource class hosted at the URI path "/myresource"
  */
-@Path("/myresource")
+@Path("/myresource/teams")
 public class MyResource {
 
     public static List<String> myList;
@@ -28,6 +36,7 @@ public class MyResource {
     private static final int iStringSize = 80;
 
     private static List<MyResourceObject> myResourceObjectList = null;
+    private static List<MyCoachObject> myCoachesObjectList = null;
 
 
     // Main is only used for Java Apprentice class tasks and not part of the service.
@@ -52,7 +61,6 @@ public class MyResource {
             Charset charset = Charset.forName("US-ASCII");
             String file = "bbtourneywinners.txt";
             try {
-//                String  current = new java.io.File( "." ).getCanonicalPath();
                 BufferedReader reader = new BufferedReader(new FileReader(file));
 
                 String line = null;
@@ -72,6 +80,47 @@ public class MyResource {
             for (String s : instance.myList) {
                 myResourceObjectList.add(new MyResourceObject(iCount++, s));
             }
+        }
+        // Create the Resource List from the strings read in from the file
+        if (myCoachesObjectList == null)
+            myCoachesObjectList = new ArrayList<MyCoachObject>();
+        if (myCoachesObjectList.size()==0) {
+                myCoachesObjectList.add(new MyCoachObject(0, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(1, "Adolph", "Rupp", 876));
+                myCoachesObjectList.add(new MyCoachObject(2, "Dean", "Smith", 879));
+                myCoachesObjectList.add(new MyCoachObject(3, "Bob", "Knight", 662));
+                myCoachesObjectList.add(new MyCoachObject(4, "Mike", "Krzyzewski", 983));
+                myCoachesObjectList.add(new MyCoachObject(5, "Rick", "Pitino", 341));
+                myCoachesObjectList.add(new MyCoachObject(6, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(7, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(8, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(9, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(10, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(11, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(12, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(13, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(14, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(15, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(16, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(17, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(18, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(19, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(20, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(21, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(22, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(23, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(24, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(25, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(26, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(27, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(28, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(29, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(30, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(31, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(32, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(33, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(34, "John", "Wooden", 620));
+                myCoachesObjectList.add(new MyCoachObject(35, "John", "Wooden", 620));
         }
 
         return instance;
@@ -108,7 +157,8 @@ public class MyResource {
                 "  </pre>" +
                 "</body>" +
                 "</html>";
-        return Response.status(Response.Status.OK).entity(retVal).build();
+        String eTag = String.valueOf(Response.status(200).hashCode());
+        return Response.status(Response.Status.OK).tag(eTag).entity(retVal).build();
     }
 
 
@@ -119,19 +169,19 @@ public class MyResource {
     @GET
     @Path("{id}")
     @Produces("text/plain")
-    public Response getQueryParam(@PathParam("id") String id) {
+    public Response getPlainTextParam(@PathParam("id") String id) {
         if (id != null) {
             Integer iIndex = new Integer(0);
             try {
                 iIndex = Integer.parseInt(id);
                 if (iIndex >= getInstance().myList.size()) {
-                    String sErrText = "Query parameter: " + iIndex + " must be less than the length of the list of items, which is " + ((Integer) (getInstance().myList.size()-1)).toString();
+                    String sErrText = "Path parameter: " + iIndex + " must be less than the length of the list of items, which is " + ((Integer) (getInstance().myList.size()-1)).toString();
                     return Response.status(Response.Status.NOT_FOUND).entity(sErrText).build();
                 }
             }
 
             catch (NumberFormatException exc) {
-                String sErrText = "Query parameter must be must be an integer number.";
+                String sErrText = "Path parameter must be must be an integer number.";
                 return Response.status(Response.Status.BAD_REQUEST).entity(sErrText).build();
 
             }
@@ -140,75 +190,49 @@ public class MyResource {
                 return Response.status(Response.Status.BAD_REQUEST).entity(sErrText).build();
 
             }
+            String eTag = String.valueOf(Response.status(200).hashCode());
             String retVal = "Item number " + iIndex.toString() + " : " + getInstance().myList.get(iIndex.intValue()).toString();
-            return Response.status(Response.Status.OK).entity(retVal).build();
+            return Response.status(Response.Status.OK).tag(eTag).entity(retVal).build();
         }
         else {
-            return Response.status(Response.Status.OK).entity("Okay").build();
+            return Response.status(Response.Status.BAD_REQUEST).entity("Invalid id").build();
         }
     }
 
-    // This method is called if XML is request and a param is passed
+    // This method is called if JSON is request and a param is NOT passed
     @GET
-    @Path("{id}")
-    @Produces(MediaType.TEXT_XML)
-    public Response getXMLItem(@PathParam("id") String id) {
-//    public Response getXMLItem(@QueryParam("indVar")String strParam) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getJSONAllItems() {
 
-        Integer iIndex = new Integer(0);
 
+        String retVal = new String();
+
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            iIndex = Integer.parseInt(id);
-            if (iIndex >= getInstance().myList.size()) {
-                String sErrText = "Query parameter: " + iIndex + " must be less than the length of the list of items, which is " + ((Integer) (getInstance().myList.size()-1)).toString();
-                return Response.status(Response.Status.NOT_FOUND).entity(sErrText).build();
-            }
-        }
+            ByteArrayOutputStream out=new ByteArrayOutputStream();
+            JsonGenerator jsonGenerator=new JsonFactory().createJsonGenerator(out,JsonEncoding.UTF8);
 
-        catch (NumberFormatException exc) {
-            String sErrText = "Query parameter must be must be an integer number.";
+            mapper.writeValue(jsonGenerator,getInstance().myResourceObjectList );
+            retVal = out.toString();
+
+        } catch (JsonGenerationException e) {
+            String sErrText = "JSON Generation Error";
             return Response.status(Response.Status.BAD_REQUEST).entity(sErrText).build();
-
-        }
-        catch (IndexOutOfBoundsException exc) {
-            String sErrText = "Index must be between 0 and " + ((Integer) getInstance().myList.size()).toString();
+        } catch (JsonMappingException e) {
+            String sErrText = "JSON Mapping Error";
             return Response.status(Response.Status.BAD_REQUEST).entity(sErrText).build();
-
+        } catch (IOException e) {
+            String sErrText = "I/O Error";
+            return Response.status(Response.Status.BAD_REQUEST).entity(sErrText).build();
         }
+        String eTag = String.valueOf(Response.status(200).hashCode());
+        return Response.status(Response.Status.OK).tag(eTag).entity(retVal).build();
 
-        String retVal = "<hello>" +
-                "<title>Jerry's First REST Application</title>" +
-                "<list>" +
-                "<itemID>" +
-                ((Integer)getInstance().myResourceObjectList.get(iIndex.intValue()).itemID).toString() +
-                "</itemID>" +
-                "<itemName>" +
-                getInstance().myResourceObjectList.get(iIndex.intValue()).itemName.toString() +
-                "</itemName>" +
-                "<school>" +
-                getInstance().myResourceObjectList.get(iIndex.intValue()).schoolName.toString() +
-                "</school>" +
-                "<numwins>" +
-                ((Integer)getInstance().myResourceObjectList.get(iIndex.intValue()).numWins).toString() +
-                "</numwins>" +
-                "<winlist>";
-
-                String sWins = "";
-                int i = 0;
-                for (Object s : (getInstance().myResourceObjectList.get(iIndex.intValue())).winYears) {
-                    sWins += "<winyear>" + s.toString() + "</winyear>";
-                }
-        retVal += sWins +
-                "</winlist>" +
-                "</list>" +
-                "</hello>";
-        return Response.status(Response.Status.OK).entity(retVal).build();
-        //return Response.ok(retVal, MediaType.TEXT_XML).build();
     }
 
     // This method is called if XML is request and a param is NOT passed
     @GET
-    @Produces(MediaType.TEXT_XML)
+    @Produces({MediaType.TEXT_XML, MediaType.APPLICATION_ATOM_XML})
     public Response getXMLAllItems(@PathParam("id") String id) {
         String retVal = new String();
         retVal ="<hello> " +
@@ -221,19 +245,80 @@ public class MyResource {
             retVal += "<item itemID=\"" + getInstance().myResourceObjectList.get(i).itemID + "\">localhost:8080/firstRESTApp/myresource/" + iIndex.toString() + "</item>";
         }
 
-/*
-        for (int i = 0; i < getInstance().myResourceObjectList.size(); i++) {
-            retVal += "<item>" + getInstance().myResourceObjectList.get(i).itemFullString + "</item>";
-        }
-*/
         retVal += "</list>" +
                 "</hello>";
+        String eTag = String.valueOf(Response.status(200).hashCode());
+        return Response.status(Response.Status.OK).tag(eTag).entity(retVal).build();
 
-        return Response.status(Response.Status.OK).entity(retVal).build();
-        //return Response.ok(retVal, MediaType.TEXT_XML).build();
     }
 
-    // This method is called if HTML is request
+
+    // This method is called if XML or JSON is requested and an id is passed
+    @GET
+    @Path("{id}")
+    @Produces({MediaType.TEXT_XML, MediaType.APPLICATION_JSON, MediaType.APPLICATION_ATOM_XML})
+    public Response getXMLItem(@PathParam("id") String id) {
+
+        Integer iIndex = new Integer(0);
+
+        try {
+            iIndex = Integer.parseInt(id);
+            if (iIndex >= getInstance().myList.size()) {
+                String sErrText = "Path parameter: " + iIndex + " must be less than the length of the list of items, which is " + ((Integer) (getInstance().myList.size()-1)).toString();
+                return Response.status(Response.Status.NOT_FOUND).entity(sErrText).build();
+            }
+        }
+
+        catch (NumberFormatException exc) {
+            String sErrText = "Path parameter must be must be an integer number.";
+            return Response.status(Response.Status.BAD_REQUEST).entity(sErrText).build();
+
+        }
+        catch (IndexOutOfBoundsException exc) {
+            String sErrText = "Index must be between 0 and " + ((Integer) getInstance().myList.size()).toString();
+            return Response.status(Response.Status.BAD_REQUEST).entity(sErrText).build();
+
+        }
+        String eTag = String.valueOf(Response.status(200).hashCode());
+        return Response.status(Response.Status.OK).tag(eTag).entity((getInstance().myResourceObjectList.get(iIndex.intValue()))).build();
+
+    }
+
+    // This method is called if XML or JSON is requested and an id is passed
+    @GET
+    @Path("{id}/coaches")
+    @Produces({MediaType.TEXT_XML, MediaType.APPLICATION_JSON})
+    @TypeHint(MyCoachObject.class)
+    public Response getXMLCoachsItem(@PathParam("id") String id) {
+
+        Integer iIndex = new Integer(0);
+
+        try {
+            iIndex = Integer.parseInt(id);
+            if (iIndex >= getInstance().myList.size()) {
+                String sErrText = "Path parameter: " + iIndex + " must be less than the length of the list of items, which is " + ((Integer) (getInstance().myList.size()-1)).toString();
+                return Response.status(Response.Status.NOT_FOUND).entity(sErrText).build();
+            }
+        }
+
+        catch (NumberFormatException exc) {
+            String sErrText = "Path parameter must be must be an integer number.";
+            return Response.status(Response.Status.BAD_REQUEST).entity(sErrText).build();
+
+        }
+        catch (IndexOutOfBoundsException exc) {
+            String sErrText = "Index must be between 0 and " + ((Integer) getInstance().myList.size()).toString();
+            return Response.status(Response.Status.BAD_REQUEST).entity(sErrText).build();
+
+        }
+        String eTag = String.valueOf(Response.status(200).hashCode());
+        return Response.status(Response.Status.OK).tag(eTag).entity((getInstance().myCoachesObjectList.get(iIndex.intValue()))).build();
+
+    }
+
+
+
+    // This method is called if HTML is request and an id is passed
     @GET
     @Path("{id}")
     @Produces(MediaType.TEXT_HTML)
@@ -242,13 +327,13 @@ public class MyResource {
         try {
             iIndex = Integer.parseInt(id);
             if (iIndex >= getInstance().myList.size()) {
-                String sErrText = "Query parameter: " + iIndex + " must be less than the length of the list of items, which is " + ((Integer) (getInstance().myList.size()-1)).toString();
+                String sErrText = "Path parameter: " + iIndex + " must be less than the length of the list of items, which is " + ((Integer) (getInstance().myList.size()-1)).toString();
                 return Response.status(Response.Status.NOT_FOUND).entity(sErrText).build();
             }
         }
 
         catch (NumberFormatException exc) {
-            String sErrText = "Query parameter must be must be an integer number.";
+            String sErrText = "Path parameter must be must be an integer number.";
             return Response.status(Response.Status.BAD_REQUEST).entity(sErrText).build();
 
         }
@@ -259,7 +344,10 @@ public class MyResource {
         }
         String retVal =  "<html> " + "<title>" + "Jerry's First REST Application" + "</title>"
                 + "<body><h1>" + getInstance().myList.get(iIndex.intValue()).toString() + "</h1></body>" + "</html> ";
-        return Response.status(Response.Status.OK).entity(retVal).build();
+        String eTag = String.valueOf(Response.status(200).hashCode());
+        return Response.status(Response.Status.OK).tag(eTag).entity(retVal).build();
     }
+
+
 
 }
