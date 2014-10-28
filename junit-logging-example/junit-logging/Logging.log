@@ -1,0 +1,8 @@
+2014-10-28 17:18:49,271 [main] INFO  foo - Adding two ints. intOne="6" intTwo="5"
+2014-10-28 17:18:49,271 [main] INFO  foo - Raising one number to another power.
+2014-10-28 17:18:49,272 [main] WARN  com.jwc.examples.Calculator - Warning: intOne too big! intOne="10001.000000"
+2014-10-28 17:21:52,772 [main] INFO  foo - Raising one number to another power.
+2014-10-28 17:21:59,393 [main] INFO  foo - Subtracting two ints.
+2014-10-28 17:22:05,411 [main] INFO  foo - Adding two ints. intOne="7" intTwo="6"
+2014-10-28 17:22:05,412 [main] INFO  foo - Subtracting two ints.
+2014-10-28 17:22:05,416 [main] INFO  foo - Raising one number to another power.
