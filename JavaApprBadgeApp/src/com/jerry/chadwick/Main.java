@@ -21,7 +21,7 @@ public class Main {
         }
     }
 
-    public static List<String> myList2;
+    public static List<String> myList2 = new ArrayList<String>();
     public static List<String> myBigStringList;
     public static long lMyCounter = 0;
 //    public static final String A100CHARSTRING = "Lorem ipsum dolor si";
@@ -144,14 +144,14 @@ public class Main {
         return myList2.size();
     }
 
-    public static int WriteTenThousand() {
+    public static int WriteTenThousand(String fileName) {
         Charset charset = Charset.forName("US-ASCII");
-        String file = "tenthousandsorted.txt";
+
         int iCount = 0;
 
         try {
 //            String  current = new java.io.File( "." ).getCanonicalPath();
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
 
 //            String line = null;
             if (myList2.size()>0) {
@@ -203,87 +203,31 @@ public class Main {
 
         // Java Apprentice class task:
         // Add strings to list until OOM...
-
+/*
         try {
             addStringsUntilNoMem();
         } catch (OutOfMemoryError e) {
             System.out.println("Got out of memory exception -- JWC");
         }
-/*
-        if (false) {
-            // -------------------------------
-            // Warm up all classes/methods we will use
-            runGC();
-            usedMemory();
-            // Array to keep strong references to allocated objects
-            final int count = 100000;
-            Object[] objects = new Object[count];
-
-            long heap1 = 0;
-            // Allocate count+1 objects, discard the first one
-            for (int i = -1; i < count; ++i) {
-                Object object = null;
-
-                // Instantiate your data here and assign it to object
-
-                //object = new Object ();
-                //object = new Integer (i);
-                //object = new Long (i);
-                object = new String("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi commodo, ipsum sed pharetra gravida.");
-                //object = new byte [128][1]
-
-                if (i >= 0)
-                    objects[i] = object;
-                else {
-                    object = null; // Discard the warm up object
-                    runGC();
-                    heap1 = usedMemory(); // Take a before heap snapshot
-                }
-            }
-            runGC();
-            long heap2 = usedMemory(); // Take an after heap snapshot:
-
-            final int size = Math.round(((float) (heap2 - heap1)) / count);
-            System.out.println("'before' heap: " + heap1 +
-                    ", 'after' heap: " + heap2);
-            System.out.println("heap delta: " + (heap2 - heap1) +
-                    ", {" + objects[0].getClass() + "} size = " + size + " bytes");
-            for (int i = 0; i < count; ++i) objects[i] = null;
-            objects = null;
-        }
-
-        // Java Apprentice class task: -----------------------------------------
-        if (false) {
-            long lAvailableMemory = instance.getAvailableMemory();
-            int minMemForString = 8 * (int) ((((iStringSize) * 2) + 45) / 8);
-            long lNumStrings = lAvailableMemory / minMemForString;
-
-            if (myList2 == null) {
-                myList2 = new ArrayList<String>();
-                try {
-                    while (true) {
-                        myList2.add("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi commodo, ipsum sed pharetra gravida.");
-                    }
-                } catch (OutOfMemoryError e) {
-                    lNumStrings = myList2.size();
-
-                }
-                long lNewAvailableMemory = instance.getAvailableMemory();
-                long lUsedMemory = lAvailableMemory - lNewAvailableMemory;
-                long lTest = lUsedMemory;
-            }
-        }
-
-
 */
 
         // Java Apprentice class task:
         //   Read in 10,000 line file, sort it, then write sorted file back out.
 
-        if(false) {
+        System.out.println("Working Directory = " +
+                System.getProperty("user.dir"));
+
+        if(true) {
+            String sortedFile = "tenthousandsorted.txt";
+            String reversedFile = "tenthousandreversed.txt";
+
             int iLinesRead = ReadTenThousand();
+
             java.util.Collections.sort(myList2);
-            int iLinesWritten = WriteTenThousand();
+            int iLinesWritten = WriteTenThousand(sortedFile);
+
+            java.util.Collections.reverse(myList2);
+            iLinesWritten = WriteTenThousand(reversedFile);
         }
         // ...done. ------------------------------------------------------------
 
