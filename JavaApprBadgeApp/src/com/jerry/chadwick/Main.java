@@ -202,7 +202,9 @@ public class Main {
 
 
         // Java Apprentice class task:
-        // Add strings to list until OOM...
+        // Add strings to list until BOOM...
+
+// Uncomment this section to cause boom!
 /*
         try {
             addStringsUntilNoMem();
