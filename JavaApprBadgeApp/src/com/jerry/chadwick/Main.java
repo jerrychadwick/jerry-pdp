@@ -24,6 +24,8 @@ public class Main {
     public static List<String> myList2 = new ArrayList<String>();
     public static List<String> myBigStringList;
     public static long lMyCounter = 0;
+    public static long lMyAccumulator = 0;
+
 //    public static final String A100CHARSTRING = "Lorem ipsum dolor si";
 //    public static final String A100CHARSTRING = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi commodo, ipsum sed pharetra gravida.";
     public static final String A100CHARSTRING = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Morbi commodo, ipsum sed pharetra gravida." +
@@ -91,9 +93,11 @@ public class Main {
             myBigStringList = new ArrayList<String>();
 
         while (true) {
-            myBigStringList.add(A100CHARSTRING);
+            String toAdd = A100CHARSTRING + lMyCounter;
+            myBigStringList.add(toAdd);
+            lMyAccumulator += toAdd.length();
             lMyCounter++;
-            System.out.println("#chars approx = " + lMyCounter * minMemForString);
+            System.out.println("counter = " + lMyCounter + " numchars = " + lMyAccumulator);
         }
     }
 
@@ -205,13 +209,13 @@ public class Main {
         // Add strings to list until BOOM...
 
 // Uncomment this section to cause boom!
-/*
+
         try {
             addStringsUntilNoMem();
         } catch (OutOfMemoryError e) {
             System.out.println("Got out of memory exception -- JWC");
         }
-*/
+
 
         // Java Apprentice class task:
         //   Read in 10,000 line file, sort it, then write sorted file back out.
