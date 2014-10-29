@@ -2,25 +2,57 @@ package com.jerry.chadwick;
 
 // Fruits example of INHERITANCE
 
-class  Fruit {
+// Fruits example of COMPOSITION
 
-    // Return int number of pieces of peel that
-    // resulted from the peeling activity.
-    public int peel() {
+abstract class  FruitI {
+    abstract int getNumSlices ();
+    abstract int caloriesPerSlice ();
 
-        System.out.println("Peeling is appealing using inheritance.");
-        return 1;
+    public int getCalories() {
+        return caloriesPerSlice() * getNumSlices();
     }
+
 }
 
-// Apple is a sub-class of Fruit and can use the Fruit Class's peel() method directly.
-class  Apple extends Fruit {
+
+class  OrangeI extends FruitI {
+
+
+    @Override
+    public int getNumSlices() {
+        return 7;
+    }
+
+    @Override
+    public int caloriesPerSlice() {
+        return 17;
+    }
+
+}
+
+class  AppleI extends FruitI {
+
+
+    @Override
+    public int getNumSlices() {
+        return 4;
+    }
+
+    @Override
+    public int caloriesPerSlice() {
+        return 14;
+    }
+
 }
 
 public class InheritanceExample {
 
     public static void main(String[] args) {
-        Apple apple = new Apple();
-        int pieces = apple.peel();  // Apple inherited Fruit's peel() method.
+        AppleI apple = new AppleI();
+        OrangeI orange = new OrangeI();
+
+        System.out.println("An apple has " + apple.getCalories() + " calories ");
+        System.out.println("An orange has " + orange.getCalories() + " calories ");
     }
 }
+

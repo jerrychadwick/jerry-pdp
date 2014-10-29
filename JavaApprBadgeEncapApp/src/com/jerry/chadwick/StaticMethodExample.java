@@ -1,5 +1,4 @@
 package com.jerry.chadwick;
-import java.lang.Math;
 
 /**
  * Created by jchadwic on 9/12/14.
@@ -8,28 +7,54 @@ import java.lang.Math;
 
 // Fruits example of STATIC METHOD CALLS
 
-class FruitIII {
+class CalorieCalculatorII {
 
-    // Return int number of pieces of peel that
-    // resulted from the peeling activity.
-    public static int peel() {
+    public static int calculateCalories(int calPerSlice, int numSlices) {
+        return calPerSlice * numSlices;
+    }
 
-        System.out.println("Peeling is appealing using a static method call.");
-        return 1;
+}
+
+// Orange is a composition of
+class  OrangeIII {
+
+    public int getNumSlices() {
+        return 12;
+    }
+
+    public int caloriesPerSlice() {
+        return 36;
+    }
+
+    public int getCalories() {
+        return CalorieCalculatorII.calculateCalories(getNumSlices(), caloriesPerSlice());
     }
 }
 
-class AppleIII {
-    public int peel() {
-        return FruitIII.peel();     // calling FruitIII's peel method statically.
+// Apple is a composition of
+class  AppleIII  {
+
+    public int getNumSlices() {
+        return 2;
     }
+
+    public int caloriesPerSlice() {
+        return 25;
+    }
+
+    public int getCalories() {
+        return CalorieCalculatorII.calculateCalories(getNumSlices(), caloriesPerSlice());
+    }
+
 }
 
 public class StaticMethodExample {
 
     public static void main(String[] args) {
         AppleIII apple = new AppleIII();
-        int pieces = apple.peel();  // Apple's own peel() method.
-    }
+        OrangeIII orange = new OrangeIII();
 
+        System.out.println("An apple has " + apple.getCalories() + " calories ");
+        System.out.println("An orange has " + orange.getCalories() + " calories ");
+    }
 }
