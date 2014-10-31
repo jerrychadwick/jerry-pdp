@@ -19,24 +19,19 @@ class Animal {
         System.out.println("I'm a " + name);
     }
 
-    public Animal (String name, int legs) {
-        this.strName = name;
-        this.iLegs = legs;
+    public Animal (int legs) {
+        this("(unknown name)", legs);
         System.out.println("I'm a " + this.strName);
         System.out.println("I have " + this.iLegs + " legs.");
     }
-
-    public Animal (int legs) {
-        this.strName = "(unknown name)";
-        this.iLegs = legs;
+    public Animal (String name, int legs) {
+        this(name, legs, false);
         System.out.println("I'm a " + this.strName);
         System.out.println("I have " + this.iLegs + " legs.");
     }
 
     public Animal (String name, int legs, boolean hasTeeth) {
-        this.strName = name;
-        this.iLegs = legs;
-        this.bHasTeeth = hasTeeth;
+        this(name, legs, hasTeeth, "unknown");
         System.out.println("I'm a " + this.strName);
         System.out.println("I have " + legs + " legs.");
         System.out.println("I " + (this.bHasTeeth ? "DO " : "DO NOT ") + "have teeth." );
