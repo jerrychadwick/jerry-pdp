@@ -56,7 +56,7 @@ public class Main {
             strInstanceOf = "No";
         }
 
-        System.out.println("Is class 'B' and instanceof class 'A'? " + strInstanceOf );
+        System.out.println("Is class 'B' an instanceof class 'A'? " + strInstanceOf );
 
         // ----------------------------------------------------------------------------
         // CASTING example
@@ -64,6 +64,11 @@ public class Main {
         if (bIsInstanceOf) {
             A a = (A) myB;
             System.out.println("After casting myB as an A, a.getPrivateName() returns: " + a.getPrivateName());
+        }
+
+        if (myA instanceof B) {
+            B myNewB = (B) myA;
+            myNewB.setTime();
         }
     }
 
